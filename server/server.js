@@ -78,10 +78,22 @@ app.use('/api/registrations', registrationRoutes);
 
 // ==================== ERROR HANDLING ====================
 
-// 404 Not Found middleware
-app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' });
-});
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path');
+  // Set static folder
+  app.use(express.static(path.join(__dirname, '../client/build')));
+
+  // Any route that is not an API route will be handled by the React app
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+} else {
+  // 404 Not Found middleware for development or API-only mode
+  app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
+  });
+}
 
 // Global error handling middleware
 app.use((error, req, res, next) => {
