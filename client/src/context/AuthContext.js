@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   const register = useCallback(async (name, email, password) => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch('https://bellcorp-event-assignment.onrender.com/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   const login = useCallback(async (email, password) => {
     try {
       setError(null);
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('https://bellcorp-event-assignment.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
