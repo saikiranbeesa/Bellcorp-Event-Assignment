@@ -20,13 +20,42 @@ connectDB();
 // ==================== MIDDLEWARE ====================
 
 // Enable CORS for frontend communication
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true,
-  })
-);
+// Supports either a single CLIENT_URL, a comma-separated CLIENT_URLS,
+// or — if none provided — a permissive fallback to allow deployed frontends
+const clientUrl = process.env.CLIENT_URL;
+const clientUrls = process.env.CLIENT_URLS; // optional comma-separated list
+let allowedOrigins = [];
+if (clientUrls) {
+  allowedOrigins = clientUrls.split(',').map((s) => s.trim()).filter(Boolean);
+} else if (clientUrl) {
+  allowedOrigins = [clientUrl.trim()];
+}
+
+if (allowedOrigins.length > 0) {
+  app.use(
+    cors({
+      origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) !== -1) return callback(null, true);
+        return callback(new Error('Origin not allowed by CORS'));
+      },
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      credentials: true,
+    })
+  );
+} else {
+  // No CLIENT_URL configured: allow all origins (suitable for APIs using
+  // Authorization headers). For stricter security, set CLIENT_URL or
+  // CLIENT_URLS in the Render environment variables to restrict origins.
+  app.use(
+    cors({
+      origin: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      credentials: false,
+    })
+  );
+}
 
 // Parse incoming JSON requests
 app.use(express.json());
