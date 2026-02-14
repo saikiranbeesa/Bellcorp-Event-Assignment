@@ -1,0 +1,10 @@
+/* App Component Styling */
+.app {
+  background: white;
+}
+
+@media (max-width: 768px) {
+  .app {
+    font-size: 14px;
+  }
+}
