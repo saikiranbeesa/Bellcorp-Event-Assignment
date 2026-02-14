@@ -1,8 +1,17 @@
 import axios from 'axios';
 
-// Create axios instance with base URL
+// Create axios instance with base URL. Use REACT_APP_API_URL if provided,
+// otherwise default to localhost (used for local dev with the server running).
+// Ensure the base URL includes '/api' since server routes are mounted at /api/*
+let rawBase = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+rawBase = rawBase.trim();
+if (rawBase === '') rawBase = 'http://localhost:5000';
+// remove trailing slashes then append /api if not already present
+let baseURL = rawBase.replace(/\/+$/, '');
+if (!baseURL.endsWith('/api')) baseURL = baseURL + '/api';
+
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
