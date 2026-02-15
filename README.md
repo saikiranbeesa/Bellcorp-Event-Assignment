@@ -1,6 +1,7 @@
 # 🎯 Bellcorp Event Management Application
 
-A complete, production-ready MERN Stack Event Management platform built with modern technologies and best practices.
+This application is built with scalability in mind, ensuring efficient handling of growing event data while maintaining data integrity and performance.
+
 
 ## 🚀 Features
 
